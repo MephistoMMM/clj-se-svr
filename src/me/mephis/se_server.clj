@@ -18,22 +18,26 @@
 
 (defn modify-yaml-content [storage-path]
   #(spit (str storage-path "/" (:name (:params %)))
-         (:data (json/read-str (:body %)))))
+         (-> (:body %)
+             (json/read-str :key-fn keyword)
+             :data)))
 
 (defn wrap-resp-json [f]
   #(content-type (response
                   (json/write-str {:data (f %)}))
                 "application/json"))
 
+(def storage-path (get-env
+                   SE_YAML_STORAGE_PATH
+                   (get-env "PWD")))
+
 (compojure/defroutes app
   (compojure/PUT "/api/spec/:name" params
-                 (->> (get-env "PWD")
-                      (get-env SE_YAML_STORAGE_PATH)
-                      provide-yaml-content
+                 (->> storage-path
+                      modify-yaml-content
                       wrap-resp-json))
   (compojure/GET "/api/spec/:name" params
-                 (->> (get-env "PWD")
-                      (get-env SE_YAML_STORAGE_PATH)
+                 (->> storage-path
                       provide-yaml-content
                       wrap-resp-json))
   (compojure-route/not-found "Page not found"))

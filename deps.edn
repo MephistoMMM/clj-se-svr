@@ -5,6 +5,7 @@
         ring/ring {:mvn/version "1.9.6"}
         compojure/compojure {:mvn/version "1.7.0"}}
  :aliases
+ ;; https://github.com/seancorfield/clj-new
  {:run-m {:main-opts ["-m" "me.mephis.se-server"]}
   :run-x {:ns-default me.mephis.se-server
           :exec-fn greet
