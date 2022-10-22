@@ -15,7 +15,7 @@ paths:
     put:
       tags:
         - pet
-      summary: Update an existing pet
+      summary: Update an existing pet test ets
       description: Update an existing pet by Id
       operationId: updatePet
       parameters:
